@@ -254,3 +254,8 @@ The demo is available at https://wingkwong.github.io/react-quiz-component/
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Local test
+Start a docker instance of verdaccio, which is a local npm registry
+
+`docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio`
