@@ -1,11 +1,12 @@
-import React, {useState, useEffect, useCallback, Fragment} from 'react';
+import React, { useState, useEffect, useCallback, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import QuizResultFilter from "./core-components/QuizResultFilter";
-import {checkAnswer, rawMarkup} from "./core-components/helpers";
+import { checkAnswer, rawMarkup } from "./core-components/helpers";
 import InstantFeedback from "./core-components/InstantFeedback";
 import Explanation from "./core-components/Explanation";
+import TextQuestion from './question-types/TextQuestion';
 
-const Core = ({questions, appLocale, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect}) => {
+const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect }) => {
   const [incorrectAnswer, setIncorrectAnswer] = useState(false);
   const [correctAnswer, setCorrectAnswer] = useState(false);
   const [showNextQuestionButton, setShowNextQuestionButton] = useState(false);
@@ -35,7 +36,7 @@ const Core = ({questions, appLocale, showDefaultResult, onComplete, customResult
   }, [currentQuestionIndex]);
 
   useEffect(() => {
-    let {answerSelectionType} = question;
+    let { answerSelectionType } = question;
     // Default single to avoid code breaking due to automatic version upgrade
     setAnswerSelectionType(answerSelectionType || 'single');
   }, [question, currentQuestionIndex]);
@@ -97,8 +98,8 @@ const Core = ({questions, appLocale, showDefaultResult, onComplete, customResult
   };
 
   const renderAnswerInResult = (question, userInputIndex) => {
-    const {answers, correctAnswer, questionType} = question;
-    let {answerSelectionType} = question;
+    const { answers, correctAnswer, questionType } = question;
+    let { answerSelectionType } = question;
     let answerBtnCorrectClassName;
     let answerBtnIncorrectClassName;
 
@@ -108,23 +109,23 @@ const Core = ({questions, appLocale, showDefaultResult, onComplete, customResult
 
     return answers.map((answer, index) => {
       if (answerSelectionType === 'single') {
-          // correctAnswer - is string
+        // correctAnswer - is string
         answerBtnCorrectClassName = (`${index + 1}` === correctAnswer ? 'correct' : '');
         answerBtnIncorrectClassName = (`${userInputIndex}` !== correctAnswer && `${index + 1}` === `${userInputIndex}` ? 'incorrect' : '');
       } else {
-          // correctAnswer - is array of numbers
+        // correctAnswer - is array of numbers
         answerBtnCorrectClassName = (correctAnswer.includes(index + 1) ? 'correct' : '');
         answerBtnIncorrectClassName = (!correctAnswer.includes(index + 1) && userInputIndex.includes(index + 1) ? 'incorrect' : '')
       }
 
       return (
-          <div key={index}>
-            <button disabled={true}
-                    className={"answerBtn btn " + answerBtnCorrectClassName + answerBtnIncorrectClassName}>
-              {questionType === 'text' && <span>{answer}</span>}
-              {questionType === 'photo' && <img src={answer} alt="image"/>}
-            </button>
-          </div>
+        <div key={index}>
+          <button disabled={true}
+            className={"answerBtn btn " + answerBtnCorrectClassName + answerBtnIncorrectClassName}>
+            {questionType === 'text' && <span>{answer}</span>}
+            {questionType === 'photo' && <img src={answer} alt="image" />}
+          </button>
+        </div>
       )
     });
   };
@@ -150,23 +151,22 @@ const Core = ({questions, appLocale, showDefaultResult, onComplete, customResult
       let answerSelectionType = question.answerSelectionType || 'single';
 
       return (
-          <div className="result-answer-wrapper" key={index + 1}>
-            <h3 dangerouslySetInnerHTML={rawMarkup(`Q${question.questionIndex}: ${question.question}`)}/>
-            {question.questionPic && <img src={question.questionPic} alt="image"/>}
-            {renderTags(answerSelectionType, question.correctAnswer.length, question.segment)}
-            <div className="result-answer">
-              {renderAnswerInResult(question, userInputIndex)}
-            </div>
-            <Explanation question={question} isResultPage={true}/>
+        <div className="result-answer-wrapper" key={index + 1}>
+          <h3 dangerouslySetInnerHTML={rawMarkup(`Q${question.questionIndex}: ${question.question}`)} />
+          {question.questionPic && <img src={question.questionPic} alt="image" />}
+          {renderTags(answerSelectionType, question.correctAnswer.length, question.segment)}
+          <div className="result-answer">
+            {renderAnswerInResult(question, userInputIndex)}
           </div>
+          <Explanation question={question} isResultPage={true} />
+        </div>
       )
     })
   }, [endQuiz, filteredValue]);
 
   const renderAnswers = (question, buttons) => {
-    const {answers, correctAnswer, questionType} = question;
-    let {answerSelectionType} = question;
-    const onClickAnswer = index => checkAnswer(index + 1, correctAnswer, answerSelectionType, {
+    const { answers, correctAnswer, questionType } = question;
+    let helperItems =  {
       userInput,
       userAttempt,
       currentQuestionIndex,
@@ -182,31 +182,36 @@ const Core = ({questions, appLocale, showDefaultResult, onComplete, customResult
       setShowNextQuestionButton,
       setUserInput,
       setUserAttempt
-    });
+    };
+
+    if (questionType === 'text') return TextQuestion(question, buttons, helperItems);
+
+    let { answerSelectionType } = question;
+    const onClickAnswer = index => checkAnswer(index + 1, correctAnswer, answerSelectionType, helperItems);
 
     // Default single to avoid code breaking due to automatic version upgrade
     answerSelectionType = answerSelectionType || 'single';
 
     return answers.map((answer, index) =>
       <Fragment key={index}>
-            {(buttons[index] !== undefined)
-                ? (<button
-                    disabled={buttons[index].disabled || false}
-                    className={`${buttons[index].className} answerBtn btn`}
-                    onClick={() => onClickAnswer(index)}
-                >
-                  {questionType === 'text' && <span>{answer}</span>}
-                  {questionType === 'photo' && <img src={answer} alt="image"/>}
-                </button>)
-                : <button
-                    onClick={() => onClickAnswer(index)}
-                    className="answerBtn btn"
-                >
-                  {questionType === 'text' && answer}
-                  {questionType === 'photo' && <img src={answer} alt="image"/>}
-                </button>
-            }
-          </Fragment>
+        {(buttons[index] !== undefined)
+          ? (<button
+            disabled={buttons[index].disabled || false}
+            className={`${buttons[index].className} answerBtn btn`}
+            onClick={() => onClickAnswer(index)}
+          >
+            {questionType === 'text' && <span>{answer}</span>}
+            {questionType === 'photo' && <img src={answer} alt="image" />}
+          </button>)
+          : <button
+            onClick={() => onClickAnswer(index)}
+            className="answerBtn btn"
+          >
+            {questionType === 'text' && answer}
+            {questionType === 'photo' && <img src={answer} alt="image" />}
+          </button>
+        }
+      </Fragment>
     )
   };
 
@@ -218,71 +223,71 @@ const Core = ({questions, appLocale, showDefaultResult, onComplete, customResult
     } = appLocale;
 
     return (
-        <div className="tag-container">
-          {answerSelectionType === 'single' &&
+      <div className="tag-container">
+        {answerSelectionType === 'single' &&
           <span className="single selection-tag">{singleSelectionTagText}</span>
-          }
-          {answerSelectionType === 'multiple' &&
+        }
+        {answerSelectionType === 'multiple' &&
           <span className="multiple selection-tag">{multipleSelectionTagText}</span>}
-          <span className="number-of-selection">
-            {pickNumberOfSelection.replace("<numberOfSelection>", numberOfSelection)}
-          </span>
-          {segment && <span className="selection-tag segment">{segment}</span>}
-        </div>
+        <span className="number-of-selection">
+          {pickNumberOfSelection.replace("<numberOfSelection>", numberOfSelection)}
+        </span>
+        {segment && <span className="selection-tag segment">{segment}</span>}
+      </div>
     )
   };
 
   const renderResult = () => (
-      <div className="card-body">
-        <h2>
-          {appLocale.resultPageHeaderText.replace("<correctIndexLength>", correct.length).replace("<questionLength>", questions.length)}
-        </h2>
-        <h2>
-          {appLocale.resultPagePoint.replace("<correctPoints>", correctPoints).replace("<totalPoints>", totalPoints)}
-        </h2>
-        <br/>
-        <QuizResultFilter
-            filteredValue={filteredValue}
-            handleChange={handleChange}
-            appLocale={appLocale}
-        />
-        {renderQuizResultQuestions()}
-      </div>
+    <div className="card-body">
+      <h2>
+        {appLocale.resultPageHeaderText.replace("<correctIndexLength>", correct.length).replace("<questionLength>", questions.length)}
+      </h2>
+      <h2>
+        {appLocale.resultPagePoint.replace("<correctPoints>", correctPoints).replace("<totalPoints>", totalPoints)}
+      </h2>
+      <br />
+      <QuizResultFilter
+        filteredValue={filteredValue}
+        handleChange={handleChange}
+        appLocale={appLocale}
+      />
+      {renderQuizResultQuestions()}
+    </div>
   );
 
   return (
-      <div className="questionWrapper">
-        {!endQuiz &&
+    <div className="questionWrapper">
+      {!endQuiz &&
         <div className="questionWrapperBody">
           <div className="questionModal">
             <InstantFeedback
-                question={question}
-                showInstantFeedback={showInstantFeedback}
-                correctAnswer={correctAnswer}
-                incorrectAnswer={incorrectAnswer}
+              question={question}
+              showInstantFeedback={showInstantFeedback}
+              correctAnswer={correctAnswer}
+              incorrectAnswer={incorrectAnswer}
             />
           </div>
           <div>{appLocale.question} {currentQuestionIndex + 1}:</div>
-          <h3 dangerouslySetInnerHTML={rawMarkup(question && question.question)}/>
-          {question && question.questionPic && <img src={question.questionPic} alt="image"/>}
+          <h3 dangerouslySetInnerHTML={rawMarkup(question && question.question)} />
+          {question && question.questionPic && <img src={question.questionPic} alt="image" />}
           {question && renderTags(answerSelectionTypeState, question.correctAnswer.length, question.segment)}
           {question && renderAnswers(question, buttons)}
           {showNextQuestionButton &&
-          <div>
-            <button onClick={() => nextQuestion(currentQuestionIndex)} className="nextQuestionBtn btn">
-              {appLocale.nextQuestionBtn}
-            </button>
-          </div>
+            <div>
+              <button onClick={() => nextQuestion(currentQuestionIndex)} className="nextQuestionBtn btn">
+                {appLocale.nextQuestionBtn}
+              </button>
+            </div>
           }
         </div>
-        }
-        {endQuiz && showDefaultResultState && customResultPage === undefined &&
-          renderResult()
-        }
-        {endQuiz && !showDefaultResultState && customResultPage !== undefined &&
-          customResultPage(questionSummary)
-        }
-      </div>
+      }
+      {endQuiz && showDefaultResultState && customResultPage === undefined &&
+        renderResult()
+      }
+      {endQuiz && !showDefaultResultState && customResultPage !== undefined &&
+        customResultPage(questionSummary)
+      }
+    </div>
   );
 };
 
