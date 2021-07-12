@@ -53,8 +53,8 @@ const Quiz = ({ quiz, shuffle, showDefaultResult, onComplete, customResultPage, 
         console.error("Field 'questionType' is required.");
         return false;
       } else {
-        if(questionType != 'text' && questionType != 'photo') {
-          console.error("The value of 'questionType' is either 'text' or 'photo'.");
+        if(questionType != 'text' && questionType != 'photo' && questionType != 'code') {
+          console.error("The value of 'questionType' is either 'text', 'photo' or 'code'.");
           return false;
         }
       }

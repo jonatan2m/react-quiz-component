@@ -16,7 +16,7 @@ function App() {
     <>
       <Quiz
         quiz={quiz}
-        shuffle={true}
+        shuffle={false}
         showInstantFeedback={true}
         continueTillCorrect={true}
         onComplete={setQuizResult}

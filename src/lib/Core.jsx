@@ -4,7 +4,7 @@ import QuizResultFilter from "./core-components/QuizResultFilter";
 import { checkAnswer, rawMarkup } from "./core-components/helpers";
 import InstantFeedback from "./core-components/InstantFeedback";
 import Explanation from "./core-components/Explanation";
-import TextQuestion from './question-types/TextQuestion';
+import { TextQuestion, PictureQuestion, CodeQuestion } from './core-components/QuestionTypes';
 
 const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect }) => {
   const [incorrectAnswer, setIncorrectAnswer] = useState(false);
@@ -165,8 +165,8 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
   }, [endQuiz, filteredValue]);
 
   const renderAnswers = (question, buttons) => {
-    const { answers, correctAnswer, questionType } = question;
-    let helperItems =  {
+    const { questionType } = question;
+    let helperItems = {
       userInput,
       userAttempt,
       currentQuestionIndex,
@@ -185,34 +185,10 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
     };
 
     if (questionType === 'text') return TextQuestion(question, buttons, helperItems);
+    if (questionType === 'photo') return PictureQuestion(question, buttons, helperItems);
+    if (questionType === 'code') return CodeQuestion(question, buttons, helperItems);
 
-    let { answerSelectionType } = question;
-    const onClickAnswer = index => checkAnswer(index + 1, correctAnswer, answerSelectionType, helperItems);
-
-    // Default single to avoid code breaking due to automatic version upgrade
-    answerSelectionType = answerSelectionType || 'single';
-
-    return answers.map((answer, index) =>
-      <Fragment key={index}>
-        {(buttons[index] !== undefined)
-          ? (<button
-            disabled={buttons[index].disabled || false}
-            className={`${buttons[index].className} answerBtn btn`}
-            onClick={() => onClickAnswer(index)}
-          >
-            {questionType === 'text' && <span>{answer}</span>}
-            {questionType === 'photo' && <img src={answer} alt="image" />}
-          </button>)
-          : <button
-            onClick={() => onClickAnswer(index)}
-            className="answerBtn btn"
-          >
-            {questionType === 'text' && answer}
-            {questionType === 'photo' && <img src={answer} alt="image" />}
-          </button>
-        }
-      </Fragment>
-    )
+    return (<div>No answers</div>);
   };
 
   const renderTags = (answerSelectionType, numberOfSelection, segment) => {
@@ -269,8 +245,18 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
           </div>
           <div>{appLocale.question} {currentQuestionIndex + 1}:</div>
           <h3 dangerouslySetInnerHTML={rawMarkup(question && question.question)} />
-          {question && question.questionPic && <img src={question.questionPic} alt="image" />}
+          {question && question.questionPic && (
+            <div className="question-picture-describing">
+              <img src={question.questionPic} alt="image" />
+            </div>)}
           {question && renderTags(answerSelectionTypeState, question.correctAnswer.length, question.segment)}
+          {showNextQuestionButton &&
+            <div>
+              <button onClick={() => nextQuestion(currentQuestionIndex)} className="nextQuestionBtn btn">
+                {appLocale.nextQuestionBtn}
+              </button>
+            </div>
+          }
           {question && renderAnswers(question, buttons)}
           {showNextQuestionButton &&
             <div>

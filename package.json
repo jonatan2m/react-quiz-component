@@ -48,7 +48,9 @@
     "url": "https://github.com/jonatan2m/react-quiz-component.git"
   },
   "dependencies": {
+    "ace-builds": "^1.4.12",
     "dompurify": "^2.3.0",
-    "marked": "^0.7.0"
+    "marked": "^0.7.0",
+    "react-ace": "^9.4.1"
   }
 }
