@@ -4,7 +4,7 @@ import QuizResultFilter from "./core-components/QuizResultFilter";
 import { checkAnswer, rawMarkup } from "./core-components/helpers";
 import InstantFeedback from "./core-components/InstantFeedback";
 import Explanation from "./core-components/Explanation";
-import { TextQuestion, PictureQuestion, CodeQuestion } from './core-components/QuestionTypes';
+import { TextQuestion, PictureQuestion, CodeQuestion, CodeAnswerResult } from './core-components/QuestionTypes';
 
 const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect }) => {
   const [incorrectAnswer, setIncorrectAnswer] = useState(false);
@@ -21,6 +21,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
   const [userAttempt, setUserAttempt] = useState(1);
   const [showDefaultResultState, setShowDefaultResult] = useState(true);
   const [answerSelectionTypeState, setAnswerSelectionType] = useState(undefined);
+  const [codeInput, setCodeInput] = useState(questions[currentQuestionIndex].codeInput);
 
   const [totalPoints, setTotalPoints] = useState(0);
   const [correctPoints, setCorrectPoints] = useState(0);
@@ -106,6 +107,8 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
     // Default single to avoid code breaking due to automatic version upgrade
     answerSelectionType = answerSelectionType || 'single';
 
+    if(questionType === 'code') return CodeAnswerResult(question, codeInput);
+
 
     return answers.map((answer, index) => {
       if (answerSelectionType === 'single') {
@@ -173,7 +176,8 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
       continueTillCorrect,
       showNextQuestionButton,
       incorrect,
-      correct,
+      correct,      
+      codeInput,
       setButtons,
       setCorrectAnswer,
       setIncorrectAnswer,
@@ -181,12 +185,13 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
       setIncorrect,
       setShowNextQuestionButton,
       setUserInput,
-      setUserAttempt
+      setUserAttempt,
+      setCodeInput
     };
 
     if (questionType === 'text') return TextQuestion(question, buttons, helperItems);
     if (questionType === 'photo') return PictureQuestion(question, buttons, helperItems);
-    if (questionType === 'code') return CodeQuestion(question, buttons, helperItems);
+    if (questionType === 'code') return CodeQuestion(question, helperItems);
 
     return (<div>No answers</div>);
   };

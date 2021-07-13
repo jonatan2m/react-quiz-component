@@ -129,14 +129,15 @@ export const PictureQuestion = (question, buttons, {
     )
 };
 
-export const CodeQuestion = (question, buttons, {
+export const CodeQuestion = (question, {
     userInput,
     userAttempt,
     currentQuestionIndex,
     continueTillCorrect,
     showNextQuestionButton,
     incorrect,
-    correct,
+    correct,    
+    codeInput,
     setButtons,
     setCorrectAnswer,
     setIncorrectAnswer,
@@ -144,9 +145,9 @@ export const CodeQuestion = (question, buttons, {
     setIncorrect,
     setShowNextQuestionButton,
     setUserInput,
-    setUserAttempt
-}) => {
-    let codeInput = "function my_array() { let _array = [1,2,3,4]; } ";
+    setUserAttempt,
+    setCodeInput
+}) => {    
     const { answers, correctAnswer } = question;
     let { answerSelectionType } = question;
     const onClickAnswer = () => {
@@ -154,6 +155,8 @@ export const CodeQuestion = (question, buttons, {
         console.log(codeInput);
 
         const currentlyAnswer = (new Date().getMilliseconds() % 2) + 1;
+
+        setCorrectAnswer(codeInput);
         
         return checkAnswer(currentlyAnswer, correctAnswer, answerSelectionType, {
             userInput,
@@ -184,8 +187,8 @@ export const CodeQuestion = (question, buttons, {
   mode="javascript"
   theme="github"
   name="blah2"
-//   onLoad={this.onLoad}
-  onChange={(newValue) => {codeInput = newValue}}
+  //onLoad={this.onLoad}
+  onChange={(newValue) => setCodeInput(newValue)}
   fontSize={14}
   showPrintMargin={true}
   showGutter={true}
@@ -205,28 +208,31 @@ export const CodeQuestion = (question, buttons, {
                    <span>Submit</span>
                 </button>
         </div>);
+};
 
-    return answers.map((answer, index) =>
-        <Fragment key={index}>
-            {(buttons[index] !== undefined)
-                ? (<button
-                    disabled={buttons[index].disabled || false}
-                    className={`${buttons[index].className} answer-picture-btn btn`}
-                    onClick={() => onClickAnswer(index)}
-                >
-                    <div className="question-picture-item">
-                        <img src={answer} alt="image" />
-                    </div>
-                </button>)
-                : <button
-                    onClick={() => onClickAnswer(index)}
-                    className="answer-picture-btn btn"
-                >
-                    <div className="question-picture-item">
-                        <img src={answer} alt="image" />
-                    </div>
-                </button>
-            }
-        </Fragment>
-    )
+export const CodeAnswerResult = (question, codeInput) => {    
+    const { answers, correctAnswer } = question;    
+
+    console.log(codeInput)
+
+    return (
+        <div>
+            <div id="blah2"></div>
+            <AceEditor
+  placeholder="Placeholder Text"
+  mode="javascript"
+  theme="github"
+  name="blah2"
+  //onLoad={this.onLoad}  
+  fontSize={14}
+  showPrintMargin={true}
+  showGutter={true}
+  highlightActiveLine={true}
+  value={codeInput}
+  setOptions={{
+  showLineNumbers: true,
+  tabSize: 2,
+  useWorker: false
+  }}/>
+    </div>);
 };
