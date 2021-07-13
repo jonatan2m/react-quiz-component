@@ -152,11 +152,11 @@ export const CodeQuestion = (question, {
     let { answerSelectionType } = question;
     const onClickAnswer = () => {
 
-        console.log(codeInput);
-
         const currentlyAnswer = (new Date().getMilliseconds() % 2) + 1;
 
-        setCorrectAnswer(codeInput);
+        //Examples to run JavaScript code locally
+        //https://stackoverflow.com/a/22700517
+        var result = eval('('+codeInput+')()');        
         
         return checkAnswer(currentlyAnswer, correctAnswer, answerSelectionType, {
             userInput,
@@ -180,16 +180,16 @@ export const CodeQuestion = (question, {
     answerSelectionType = answerSelectionType || 'single';
 
     return (
-        <div>
-            <div id="blah2"></div>
+        <div>            
             <AceEditor
-  placeholder="Placeholder Text"
+  placeholder="Today is your day to write a great code."
   mode="javascript"
   theme="github"
   name="blah2"
   //onLoad={this.onLoad}
   onChange={(newValue) => setCodeInput(newValue)}
   fontSize={14}
+  width='100%'
   showPrintMargin={true}
   showGutter={true}
   highlightActiveLine={true}
@@ -204,16 +204,13 @@ export const CodeQuestion = (question, {
             <button
                     onClick={() => onClickAnswer(codeInput)}
                     className="answerBtn btn"
-                >
+                    >
                    <span>Submit</span>
                 </button>
         </div>);
 };
 
-export const CodeAnswerResult = (question, codeInput) => {    
-    const { answers, correctAnswer } = question;    
-
-    console.log(codeInput)
+export const CodeAnswerResult = (codeInput) => {       
 
     return (
         <div>

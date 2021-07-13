@@ -100,15 +100,15 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
 
   const renderAnswerInResult = (question, userInputIndex) => {
     const { answers, correctAnswer, questionType } = question;
+    
+    if(questionType === 'code') return CodeAnswerResult(codeInput);    
+    
     let { answerSelectionType } = question;
     let answerBtnCorrectClassName;
     let answerBtnIncorrectClassName;
 
     // Default single to avoid code breaking due to automatic version upgrade
     answerSelectionType = answerSelectionType || 'single';
-
-    if(questionType === 'code') return CodeAnswerResult(question, codeInput);
-
 
     return answers.map((answer, index) => {
       if (answerSelectionType === 'single') {
