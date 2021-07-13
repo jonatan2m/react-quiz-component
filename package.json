@@ -1,6 +1,6 @@
 {
   "name": "react-quiz-component",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Matrix Quiz. It's based on React Quiz Component created by @wingkwong",
   "main": "lib/Quiz.js",
   "scripts": {
