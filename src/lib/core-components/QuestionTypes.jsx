@@ -136,7 +136,7 @@ export const CodeQuestion = (question, {
     continueTillCorrect,
     showNextQuestionButton,
     incorrect,
-    correct,    
+    correct,
     codeInput,
     setButtons,
     setCorrectAnswer,
@@ -147,18 +147,29 @@ export const CodeQuestion = (question, {
     setUserInput,
     setUserAttempt,
     setCodeInput
-}) => {    
+}) => {
     const { answers, correctAnswer } = question;
     let { answerSelectionType } = question;
-    const onClickAnswer = () => {
-
-        const currentlyAnswer = (new Date().getMilliseconds() % 2) + 1;
+    const [codeResult, setCodeResult] = useState("press 'Run Code' to see the result");
+    const onRunCode = () => {
 
         //Examples to run JavaScript code locally
         //https://stackoverflow.com/a/22700517
-        var result = eval('('+codeInput+')()');        
-        
-        return checkAnswer(currentlyAnswer, correctAnswer, answerSelectionType, {
+        var result = eval('(' + codeInput + ')()');
+
+        setCodeResult(result);        
+    };
+    const onSubmitAnswer = () => {
+
+        //Examples to run JavaScript code locally
+        //https://stackoverflow.com/a/22700517
+        var result = eval('(' + codeInput + ')()');    
+               
+        const isCorrect = JSON.stringify(result) === JSON.stringify(answers[correctAnswer - 1]);
+
+        const index = isCorrect ? correctAnswer : -1;
+
+        return checkAnswer(index, correctAnswer, answerSelectionType, {
             userInput,
             userAttempt,
             currentQuestionIndex,
@@ -180,56 +191,65 @@ export const CodeQuestion = (question, {
     answerSelectionType = answerSelectionType || 'single';
 
     return (
-        <div>            
+        <div>
             <AceEditor
-  placeholder="Today is your day to write a great code."
-  mode="javascript"
-  theme="github"
-  name="blah2"
-  //onLoad={this.onLoad}
-  onChange={(newValue) => setCodeInput(newValue)}
-  fontSize={14}
-  width='100%'
-  showPrintMargin={true}
-  showGutter={true}
-  highlightActiveLine={true}
-  value={codeInput}
-  setOptions={{
-  showLineNumbers: true,
-  tabSize: 2,
-  useWorker: false
-  }}/>
-        
+                placeholder="Today is your day to write a great code."
+                mode="javascript"
+                theme="github"
+                name="blah2"
+                //onLoad={this.onLoad}
+                onChange={(newValue) => setCodeInput(newValue)}
+                fontSize={14}
+                width='100%'
+                showPrintMargin={true}
+                showGutter={true}
+                highlightActiveLine={true}
+                value={codeInput}
+                setOptions={{
+                    showLineNumbers: true,
+                    tabSize: 2,
+                    useWorker: false
+                }} />
+
             {/* <textarea defaultValue={codeInput} onChange={(event) => {codeInput = event.target.value}} rows={6} /> */}
+            <div className="run-code-result">
+                <span>Result: </span> <b>{codeResult}</b>
+            </div>
             <button
-                    onClick={() => onClickAnswer(codeInput)}
-                    className="answerBtn btn"
-                    >
-                   <span>Submit</span>
-                </button>
+                onClick={() => onRunCode(codeInput)}
+                className="answerBtn btn"
+            >
+                <span>Run Code</span>
+            </button>
+            <button
+                onClick={() => onSubmitAnswer(codeInput)}
+                className="answerBtn btn"
+            >
+                <span>Submit</span>
+            </button>
         </div>);
 };
 
-export const CodeAnswerResult = (codeInput) => {       
+export const CodeAnswerResult = (codeInput) => {
 
     return (
         <div>
             <div id="blah2"></div>
             <AceEditor
-  placeholder="Placeholder Text"
-  mode="javascript"
-  theme="github"
-  name="blah2"
-  //onLoad={this.onLoad}  
-  fontSize={14}
-  showPrintMargin={true}
-  showGutter={true}
-  highlightActiveLine={true}
-  value={codeInput}
-  setOptions={{
-  showLineNumbers: true,
-  tabSize: 2,
-  useWorker: false
-  }}/>
-    </div>);
+                placeholder="Placeholder Text"
+                mode="javascript"
+                theme="github"
+                name="blah2"
+                //onLoad={this.onLoad}  
+                fontSize={14}
+                showPrintMargin={true}
+                showGutter={true}
+                highlightActiveLine={true}
+                value={codeInput}
+                setOptions={{
+                    showLineNumbers: true,
+                    tabSize: 2,
+                    useWorker: false
+                }} />
+        </div>);
 };

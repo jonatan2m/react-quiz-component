@@ -5,22 +5,22 @@ const segment = {
 };
 
 export const quiz =  {
-  "quizTitle": "React Quiz Component Demo",
-  "quizSynopsis": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim",
+  "quizTitle": "Titulo do Teste",
+  "quizSynopsis": "Descrição do que será cobrado dentro do exercicio.",
   "questions": [
     {
-      "question": "Create an algorithm to order the array. [1,5,4,6,8]",
+      "question": "Escreva algum código que faça sentido para esse exemplo",
       "questionType": "code",
-      "codeInput": "function my_array() { \n let _array = [1,2,3,4]; \n}",
+      "codeInput": "function my_array() { \n let _array = [1,2,3,4]; \n return _array; \n}",
       "answerSelectionType": "single",      
       "answers": [
-        "True",
+        [1,2,3,4],
         "False"
       ],
       "correctAnswer": "1",
       "messageForCorrectAnswer": "Correct answer. Good job.",
       "messageForIncorrectAnswer": "Incorrect answer. Please try again.",
-      "explanation": "Submit the code again.",
+      "explanation": "Explicação da resposta.",
       "point": "10"
     },
     {
