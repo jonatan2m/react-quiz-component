@@ -60,11 +60,15 @@
 }
 
 .react-quiz-container .questionWrapper img {
-  width: 100%;
+  /* width: 100%; */
 }
 
 .react-quiz-container .answerBtn {
   width: 100%;
+}
+
+.react-quiz-container .code-answer-btn {
+  /* width: 100%; */
 }
 
 .react-quiz-container .startQuizWrapper .startQuizBtn {
@@ -170,7 +174,7 @@
   display: inline-block;
   position: relative;
   height:auto;
-  width: 100%;
+  /* width: 100%; */
   overflow: hidden;
 }
 

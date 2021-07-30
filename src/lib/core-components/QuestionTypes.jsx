@@ -200,8 +200,7 @@ export const CodeQuestion = (question, {
                 placeholder="Today is your day to write a great code."
                 mode="javascript"
                 theme="github"
-                name="blah2"
-                //onLoad={this.onLoad}
+                name="blah2"                
                 onChange={(newValue) => setCodeInput(newValue)}
                 fontSize={14}
                 width='100%'
@@ -221,13 +220,13 @@ export const CodeQuestion = (question, {
             </div>
             <button
                 onClick={() => onRunCode(codeInput)}
-                className="answerBtn btn"
+                className="code-answer-btn btn"
             >
                 <span>Executar</span>
             </button>
             <button
                 onClick={() => onSubmitAnswer(codeInput)}
-                className="answerBtn btn"
+                className="code-answer-btn btn"
             >
                 <span>Submit</span>
             </button>
