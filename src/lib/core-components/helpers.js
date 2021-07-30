@@ -31,6 +31,14 @@ export const checkAnswer = (index, correctAnswer, answerSelectionType, {
         2: {disabled: true},
         3: {disabled: true}
     };
+    function getResultClassName(isCorrectAnswer) {
+        if(continueTillCorrect === false){
+            return "";
+        }
+
+        return isCorrectAnswer ? "correct" : "incorrect";
+    }
+    
     if (answerSelectionType === 'single') {
         if (userInput[currentQuestionIndex] === undefined) {
             userInput.push(index)
@@ -45,7 +53,7 @@ export const checkAnswer = (index, correctAnswer, answerSelectionType, {
                     ...prevState,
                     ...disabledAll,
                     [index - 1]: {
-                        className: (indexStr === correctAnswer) ? "correct" : "incorrect"
+                        className: getResultClassName(indexStr === correctAnswer)
                     },
                 })
             );
@@ -80,7 +88,7 @@ export const checkAnswer = (index, correctAnswer, answerSelectionType, {
                         {
                             ...disabledAll,
                             [index - 1]: {
-                                className: (indexStr === correctAnswer) ? "correct" : "incorrect"
+                                className: getResultClassName(indexStr === correctAnswer)
                             },
                         }
                     )
@@ -111,7 +119,7 @@ export const checkAnswer = (index, correctAnswer, answerSelectionType, {
                             ...prevState,
                             [index - 1]: {
                                 disabled: !prevState[index - 1],
-                                className: (correctAnswer.includes(index)) ? "correct" : "incorrect"
+                                className: getResultClassName(correctAnswer.includes(index))
                             },
                         })
                     )
@@ -121,7 +129,7 @@ export const checkAnswer = (index, correctAnswer, answerSelectionType, {
                     setButtons((prevState) => ({
                             ...prevState,
                             [index - 1]: {
-                                className: (correctAnswer.includes(index)) ? "correct" : "incorrect"
+                                className: getResultClassName(correctAnswer.includes(index))
                             },
                         })
                     )
