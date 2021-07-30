@@ -138,6 +138,7 @@ export const CodeQuestion = (question, {
     incorrect,
     correct,
     codeInput,
+    codeResult,
     setButtons,
     setCorrectAnswer,
     setIncorrectAnswer,
@@ -146,11 +147,12 @@ export const CodeQuestion = (question, {
     setShowNextQuestionButton,
     setUserInput,
     setUserAttempt,
-    setCodeInput
+    setCodeInput,
+    setCodeResult
 }) => {
     const { answers, correctAnswer } = question;
     let { answerSelectionType } = question;
-    const [codeResult, setCodeResult] = useState("press 'Run Code' to see the result");
+    
     const onRunCode = () => {
 
         //Examples to run JavaScript code locally
@@ -164,6 +166,8 @@ export const CodeQuestion = (question, {
         //Examples to run JavaScript code locally
         //https://stackoverflow.com/a/22700517
         var result = eval('(' + codeInput + ')()');    
+
+        setCodeResult(result);
                
         const isCorrect = JSON.stringify(result) === JSON.stringify(answers[correctAnswer - 1]);
 
@@ -213,13 +217,13 @@ export const CodeQuestion = (question, {
 
             {/* <textarea defaultValue={codeInput} onChange={(event) => {codeInput = event.target.value}} rows={6} /> */}
             <div className="run-code-result">
-                <span>Result: </span> <b>{codeResult}</b>
+                <span>Resultado: </span> <b>{codeResult}</b>
             </div>
             <button
                 onClick={() => onRunCode(codeInput)}
                 className="answerBtn btn"
             >
-                <span>Run Code</span>
+                <span>Executar</span>
             </button>
             <button
                 onClick={() => onSubmitAnswer(codeInput)}

@@ -22,6 +22,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
   const [showDefaultResultState, setShowDefaultResult] = useState(true);
   const [answerSelectionTypeState, setAnswerSelectionType] = useState(undefined);
   const [codeInput, setCodeInput] = useState(questions[currentQuestionIndex].codeInput);
+  const [codeResult, setCodeResult] = useState("Escreva seu código e pressione o botão 'Executar' para ver aqui o resultado");    
 
   const [totalPoints, setTotalPoints] = useState(0);
   const [correctPoints, setCorrectPoints] = useState(0);
@@ -178,6 +179,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
       incorrect,
       correct,      
       codeInput,
+      codeResult,
       setButtons,
       setCorrectAnswer,
       setIncorrectAnswer,
@@ -186,7 +188,8 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
       setShowNextQuestionButton,
       setUserInput,
       setUserAttempt,
-      setCodeInput
+      setCodeInput,
+      setCodeResult
     };
 
     if (questionType === 'text') return TextQuestion(question, buttons, helperItems);
