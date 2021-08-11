@@ -129,6 +129,7 @@ export const checkAnswer = (index, correctAnswer, answerSelectionType, {
                     setButtons((prevState) => ({
                             ...prevState,
                             [index - 1]: {
+                                disabled: !prevState[index - 1],
                                 className: getResultClassName(correctAnswer.includes(index))
                             },
                         })

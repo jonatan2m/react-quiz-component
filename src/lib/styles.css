@@ -30,7 +30,7 @@
   margin-top: 10px;
   margin-bottom: 10px;
   border-radius: 4px;
-  border: 1px solid #e8e8e8;;
+  /* border: 1px solid #e8e8e8; */
   font-size: 15px;
   display: block;
   white-space: normal;
@@ -184,4 +184,21 @@
   height:50%;
   width: 100%;
   overflow: hidden;
+}
+
+button.btn-info {
+  color: #fff;
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+}
+
+button.btn-primary { 
+  color: #fff;
+  background-color: #0062cc;
+  border-color: #005cbf;
+}
+
+/*button.answerBtn:disabled{  */
+  button.answer-picture-btn:disabled{  
+  background-color: rgba(0,0,0,0.01);  
 }

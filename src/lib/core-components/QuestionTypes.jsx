@@ -102,7 +102,7 @@ export const PictureQuestion = (question, buttons, {
         setUserAttempt
     });
     // Default single to avoid code breaking due to automatic version upgrade
-    answerSelectionType = answerSelectionType || 'single';
+    answerSelectionType = answerSelectionType || 'single';   
 
     return answers.map((answer, index) =>
         <Fragment key={index}>
@@ -148,7 +148,8 @@ export const CodeQuestion = (question, {
     setUserInput,
     setUserAttempt,
     setCodeInput,
-    setCodeResult
+    setCodeResult,
+    setQuestion
 }) => {
     const { answers, correctAnswer } = question;
     let { answerSelectionType } = question;
@@ -167,6 +168,8 @@ export const CodeQuestion = (question, {
         //https://stackoverflow.com/a/22700517
         var result = eval('(' + codeInput + ')()');    
 
+        question.codeInput = codeInput;
+        setQuestion(question);
         setCodeResult(result);
                
         const isCorrect = JSON.stringify(result) === JSON.stringify(answers[correctAnswer - 1]);
@@ -193,8 +196,8 @@ export const CodeQuestion = (question, {
     };
     // Default single to avoid code breaking due to automatic version upgrade
     answerSelectionType = answerSelectionType || 'single';
-
-    return (
+        
+    return (        
         <div>
             <AceEditor
                 placeholder="Today is your day to write a great code."
@@ -226,14 +229,14 @@ export const CodeQuestion = (question, {
             </button>
             <button
                 onClick={() => onSubmitAnswer(codeInput)}
-                className="code-answer-btn btn"
+                className="code-answer-btn btn btn-primary"
             >
                 <span>Submit</span>
             </button>
         </div>);
 };
 
-export const CodeAnswerResult = (codeInput) => {
+export const CodeAnswerResult = (question) => {
 
     return (
         <div>
@@ -242,13 +245,12 @@ export const CodeAnswerResult = (codeInput) => {
                 placeholder="Placeholder Text"
                 mode="javascript"
                 theme="github"
-                name="blah2"
-                //onLoad={this.onLoad}  
+                name="blah2"                
                 fontSize={14}
                 showPrintMargin={true}
                 showGutter={true}
                 highlightActiveLine={true}
-                value={codeInput}
+                value={question.codeInput}
                 setOptions={{
                     showLineNumbers: true,
                     tabSize: 2,

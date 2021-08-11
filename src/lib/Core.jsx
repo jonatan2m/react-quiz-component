@@ -21,7 +21,8 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
   const [userAttempt, setUserAttempt] = useState(1);
   const [showDefaultResultState, setShowDefaultResult] = useState(true);
   const [answerSelectionTypeState, setAnswerSelectionType] = useState(undefined);
-  const [codeInput, setCodeInput] = useState(questions[currentQuestionIndex].codeInput);
+  // const [codeInput, setCodeInput] = useState(questions[currentQuestionIndex].codeInput);
+  const [codeInput, setCodeInput] = useState("");
   const [codeResult, setCodeResult] = useState("Escreva seu código e pressione o botão 'Executar' para ver aqui o resultado");    
 
   const [totalPoints, setTotalPoints] = useState(0);
@@ -35,6 +36,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
 
   useEffect(() => {
     setQuestion(questions[currentQuestionIndex]);
+    setCodeInput(questions[currentQuestionIndex].codeInput);
   }, [currentQuestionIndex]);
 
   useEffect(() => {
@@ -102,7 +104,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
   const renderAnswerInResult = (question, userInputIndex) => {
     const { answers, correctAnswer, questionType } = question;
     
-    if(questionType === 'code') return CodeAnswerResult(codeInput);    
+    if(questionType === 'code') return CodeAnswerResult(question);    
     
     let { answerSelectionType } = question;
     let answerBtnCorrectClassName;
@@ -158,7 +160,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
         <div className="result-answer-wrapper" key={index + 1}>
           <h3 dangerouslySetInnerHTML={rawMarkup(`Q${question.questionIndex}: ${question.question}`)} />
           {question.questionPic && <img src={question.questionPic} alt="image" />}
-          {renderTags(answerSelectionType, question.correctAnswer.length, question.segment)}
+          {/* {renderTags(answerSelectionType, question.correctAnswer.length, question.segment)} */}
           <div className="result-answer">
             {renderAnswerInResult(question, userInputIndex)}
           </div>
@@ -189,8 +191,11 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
       setUserInput,
       setUserAttempt,
       setCodeInput,
-      setCodeResult
+      setCodeResult,
+      setQuestion
     };
+
+    console.log(questionType, buttons);
 
     if (questionType === 'text') return TextQuestion(question, buttons, helperItems);
     if (questionType === 'photo') return PictureQuestion(question, buttons, helperItems);
@@ -199,6 +204,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
     return (<div>No answers</div>);
   };
 
+  //Disable for a while
   const renderTags = (answerSelectionType, numberOfSelection, segment) => {
     const {
       singleSelectionTagText,
@@ -257,10 +263,10 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
             <div className="question-picture-describing">
               <img src={question.questionPic} alt="image" />
             </div>)}
-          {question && renderTags(answerSelectionTypeState, question.correctAnswer.length, question.segment)}
+          {/* {question && renderTags(answerSelectionTypeState, question.correctAnswer.length, question.segment)} */}
           {showNextQuestionButton &&
             <div>
-              <button onClick={() => nextQuestion(currentQuestionIndex)} className="nextQuestionBtn btn">
+              <button onClick={() => nextQuestion(currentQuestionIndex)} className="nextQuestionBtn btn btn-info">
                 {appLocale.nextQuestionBtn}
               </button>
             </div>
@@ -268,7 +274,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
           {question && renderAnswers(question, buttons)}
           {showNextQuestionButton &&
             <div>
-              <button onClick={() => nextQuestion(currentQuestionIndex)} className="nextQuestionBtn btn">
+              <button onClick={() => nextQuestion(currentQuestionIndex)} className="nextQuestionBtn btn btn-info">
                 {appLocale.nextQuestionBtn}
               </button>
             </div>
