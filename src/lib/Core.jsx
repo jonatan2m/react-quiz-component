@@ -27,7 +27,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
 
   const [totalPoints, setTotalPoints] = useState(0);
   const [correctPoints, setCorrectPoints] = useState(0);
-  const [question, setQuestion] = useState(questions[currentQuestionIndex]);
+  const [question, setQuestion] = useState(questions.current[currentQuestionIndex]);
   const [questionSummary, setQuestionSummary] = useState(undefined);
 
   useEffect(() => {
@@ -35,8 +35,8 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
   }, [showDefaultResult]);
 
   useEffect(() => {
-    setQuestion(questions[currentQuestionIndex]);
-    setCodeInput(questions[currentQuestionIndex].codeInput);
+    setQuestion(questions.current[currentQuestionIndex]);
+    setCodeInput(questions.current[currentQuestionIndex].codeInput);    
   }, [currentQuestionIndex]);
 
   useEffect(() => {
@@ -49,8 +49,8 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
     if (endQuiz) {
       let totalPointsTemp = 0;
       let correctPointsTemp = 0;
-      for (let i = 0; i < questions.length; i++) {
-        let point = questions[i].point || 0;
+      for (let i = 0; i < questions.current.length; i++) {
+        let point = questions.current[i].point || 0;
         if (typeof point === 'string' || point instanceof String) {
           point = parseInt(point)
         }
@@ -68,10 +68,10 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
 
   useEffect(() => {
     setQuestionSummary({
-      numberOfQuestions: questions.length,
+      numberOfQuestions: questions.current.length,
       numberOfCorrectAnswers: correct.length,
       numberOfIncorrectAnswers: incorrect.length,
-      questions: questions,
+      questions: questions.current,
       userInput: userInput,
       totalPoints: totalPoints,
       correctPoints: correctPoints
@@ -90,7 +90,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
     setShowNextQuestionButton(false);
     setButtons({});
 
-    if (currentQuestionIndex + 1 === questions.length) {
+    if (currentQuestionIndex + 1 === questions.current.length) {
       setEndQuiz(true)
     } else {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
@@ -142,15 +142,15 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
 
     if (filteredValue !== 'all') {
       if (filteredValue === 'correct') {
-        filteredQuestions = questions.filter((question, index) => correct.indexOf(index) !== -1);
+        filteredQuestions = questions.current.filter((question, index) => correct.indexOf(index) !== -1);
         filteredUserInput = userInput.filter((input, index) => correct.indexOf(index) !== -1)
       } else {
-        filteredQuestions = questions.filter((question, index) => incorrect.indexOf(index) !== -1);
+        filteredQuestions = questions.current.filter((question, index) => incorrect.indexOf(index) !== -1);
         filteredUserInput = userInput.filter((input, index) => incorrect.indexOf(index) !== -1)
       }
     }
 
-    return (filteredQuestions ? filteredQuestions : questions).map((question, index) => {
+    return (filteredQuestions ? filteredQuestions : questions.current).map((question, index) => {
       const userInputIndex = filteredUserInput ? filteredUserInput[index] : userInput[index];
 
       // Default single to avoid code breaking due to automatic version upgrade
@@ -230,7 +230,7 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
   const renderResult = () => (
     <div className="card-body">
       <h2>
-        {appLocale.resultPageHeaderText.replace("<correctIndexLength>", correct.length).replace("<questionLength>", questions.length)}
+        {appLocale.resultPageHeaderText.replace("<correctIndexLength>", correct.length).replace("<questionLength>", questions.current.length)}
       </h2>
       <h2>
         {appLocale.resultPagePoint.replace("<correctPoints>", correctPoints).replace("<totalPoints>", totalPoints)}
@@ -291,8 +291,8 @@ const Core = ({ questions, appLocale, showDefaultResult, onComplete, customResul
   );
 };
 
-Core.propTypes = {
-  questions: PropTypes.array,
+Core.propTypes = {  
+  questions: PropTypes.object,
   showDefaultResult: PropTypes.bool,
   onComplete: PropTypes.func,
   customResultPage: PropTypes.func,

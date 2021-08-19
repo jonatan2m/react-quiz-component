@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/mode-javascript";
@@ -153,7 +153,7 @@ export const CodeQuestion = (question, {
 }) => {
     const { answers, correctAnswer } = question;
     let { answerSelectionType } = question;
-    
+        
     const onRunCode = () => {
 
         //Examples to run JavaScript code locally

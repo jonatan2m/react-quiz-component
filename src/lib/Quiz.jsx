@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Core from './Core';
 import { defaultLocale } from './Locale';
@@ -6,20 +6,16 @@ import "./styles.css";
 
 const Quiz = ({ quiz, shuffle, showDefaultResult, onComplete, customResultPage, showInstantFeedback, continueTillCorrect }) => {
   const [start, setStart] = useState(false)
-  const [questions, setQuestions] = useState(quiz.questions)
+  // const [questions, setQuestions] = useState(quiz.questions)
+  const questions = useRef(quiz.questions.map((question, index) => ({
+         ...question,
+         questionIndex : index + 1
+       })));
 
   useEffect(() => {
     if(shuffle) {
-      setQuestions(shuffleQuestions(quiz.questions));
-    } else {
-      setQuestions(quiz.questions);
-    }
-
-    setQuestions(questions.map((question, index) => ({
-      ...question,
-      questionIndex : index + 1
-    })))
-
+      shuffleQuestions(questions.current);
+    } 
   }, [start])
 
   const shuffleQuestions = useCallback((questions) => {
